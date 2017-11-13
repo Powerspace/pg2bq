@@ -7,20 +7,28 @@ scala:
 jdk:
 - oraclejdk8
 
+cache:
+  directories:
+    - $HOME/.sbt/boot
+    - $HOME/.ivy2/cache
+
 before_install:
 - unset _JAVA_OPTIONS
-- if [[ "$TRAVIS_OS_NAME" = "osx" ]]; then brew update; brew install xz; brew install
-  sbt; fi
+- if [[ "$TRAVIS_OS_NAME" = "osx" ]]; then brew update; brew install xz; brew install sbt; fi
 
-script: sbt ++$TRAVIS_SCALA_VERSION clean compile
+script:
+- sbt ++$TRAVIS_SCALA_VERSION clean compile
+# Tricks to avoid unnecessary cache updates
+- find $HOME/.sbt -name "*.lock" | xargs rm
+- find $HOME/.ivy2 -name "ivydata-*.properties" | xargs rm
 
-after_success:
-- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION universal:packageBin; fi
+before_deploy:
+- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION clean universal:packageBin; fi
 
 deploy:
   provider: releases
   api_key:
-  - secure: VPkkX/9YPjWBYcXhyuVIOXxnYz7ojHRN4NYFnNpfp7vtglx0OEsmVXzwYVgoNddqggPVK2tfAHzhvFXsg+SujGiW3c3jDwhlppRk40pBeZ4hNJbmtEKzxETrgqIPgJWx0U209suVfe8RTeZ1GiC8qqqgXoY76wDHuKhFMkxkPTS7uf7EEZOHOw4YMIlQ53vaAOGDHgpVvLl7WdPN1s8IlIrBigyfq2e3iGO1XDemgOuXQ62/8ZITwYvnTT/G2UGgJZDPSbtPETEUw93a149jlzs65Vpd8ErrBGTEJ+XFXWx87EBixkgs3pPq97isGk4IHC2Bo/Hv47jRm1LpfJEFP4/hQKOusNWYnr/DeV54dPAZ7IFMVFY6z61ipSj2iXC+i0zvX6m9305OrzDXGPycf7i2meflUncLd8rdQbFpCk/MyIbv4suWVBM4fLjYWUaru0AFS8tsfnsoZma5aGU80Mz785JSJ0WyXngg8EhrfYqvupC0ILQ6WEApLDE6OL7lqXMjDs2ncSrBqlqpswaqCSK2/+4uUqu7cZu/B0lluDbUzeRVPPagON0ofS10Iu5soTWthtnNZuvEPtyGqzUM0ClbDN5LrDtT3txfpItZx/SkuiCGDDB2vAcGuWvAp4BEejIkwYvLZnSj1hAgCUQRg18gSsgZUxrRJlDv+0GClMQ=
+    secure: VPkkX/9YPjWBYcXhyuVIOXxnYz7ojHRN4NYFnNpfp7vtglx0OEsmVXzwYVgoNddqggPVK2tfAHzhvFXsg+SujGiW3c3jDwhlppRk40pBeZ4hNJbmtEKzxETrgqIPgJWx0U209suVfe8RTeZ1GiC8qqqgXoY76wDHuKhFMkxkPTS7uf7EEZOHOw4YMIlQ53vaAOGDHgpVvLl7WdPN1s8IlIrBigyfq2e3iGO1XDemgOuXQ62/8ZITwYvnTT/G2UGgJZDPSbtPETEUw93a149jlzs65Vpd8ErrBGTEJ+XFXWx87EBixkgs3pPq97isGk4IHC2Bo/Hv47jRm1LpfJEFP4/hQKOusNWYnr/DeV54dPAZ7IFMVFY6z61ipSj2iXC+i0zvX6m9305OrzDXGPycf7i2meflUncLd8rdQbFpCk/MyIbv4suWVBM4fLjYWUaru0AFS8tsfnsoZma5aGU80Mz785JSJ0WyXngg8EhrfYqvupC0ILQ6WEApLDE6OL7lqXMjDs2ncSrBqlqpswaqCSK2/+4uUqu7cZu/B0lluDbUzeRVPPagON0ofS10Iu5soTWthtnNZuvEPtyGqzUM0ClbDN5LrDtT3txfpItZx/SkuiCGDDB2vAcGuWvAp4BEejIkwYvLZnSj1hAgCUQRg18gSsgZUxrRJlDv+0GClMQ=
   file_glob: true
   file: "target/universal/pg2bq-*.zip"
   skip_cleanup: true
