@@ -15,9 +15,7 @@ before_install:
 script: sbt ++$TRAVIS_SCALA_VERSION clean compile
 
 after_success:
-- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSOIN releaseEarly; fi
-
-universal:packageBin
+- if [ $TRAVIS_PULL_REQUEST = 'false' ]; then sbt ++$TRAVIS_SCALA_VERSION universal:packageBin; fi
 
 deploy:
   provider: releases
