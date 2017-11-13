@@ -5,10 +5,8 @@ name := "pg2bq"
 scalaVersion := "2.11.11"
 
 scalafmtOnCompile in ThisBuild := true
-enablePlugins(GitVersioning)
 enablePlugins(JavaAppPackaging)
-
-git.baseVersion := "1.0.0"
+enablePlugins(LauncherJarPlugin)
 
 // you shall not pass
 scalacOptions in ThisBuild := Seq(
