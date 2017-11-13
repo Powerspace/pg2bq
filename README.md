@@ -2,13 +2,16 @@
 
 pg2bq is made for one thing: export tables from PostgreSQL to Google BigQuery.
 
-It's useful to keep the data at both places "in-sync" (by using cron, airflow, or whatever to schedule the export on a regular basis).
+# Why ?
 
-Note: internally, it is using the Spark framework for the sake of simplicity, but no Hadoop cluster is needed. It is configured as a "local" cluster by default, meaning the application is running standalone.
+It's useful to keep the data at both places "in-sync" (using cron, airflow, or whatever to schedule the export on a regular basis).
+If your metadata are on PostgreSQL, but your _realtime_ data are in BigQuery, it's probable you want to join them.
+
+> Note: internally, it is using the Spark framework for the sake of simplicity, but no Hadoop cluster is needed. It is configured as a "local" cluster by default, meaning the application is running standalone.
 
 # How to run it
 
-- Download the release made on GitHub: ...
+- Download the release made on GitHub: [pg2bq-1.0.3.zip](https://github.com/Powerspace/pg2bq/releases/download/v1.0.3/pg2bq-1.0.3.zip)
 - Create a Service Account to Google Cloud which has access to GCS and BigQuery, and create a json key
 - Create a configuration file for pg2bq to know where to grab and put the data:
 ```
@@ -26,18 +29,26 @@ gcloud {
   gcs.tmp-bucket = "pg-export-tmp"
 }
 ```
-- Run the application:
+- Run the application specifying the config file:
 ```
 ./bin/pg2db -Dconfig.file=configuration.json
 ```
 - Done!
 
+Add this to a scheduler every 10min and enjoy your JOINs in BigQuery.
+
+# What does it do exactly ?
+
+- It exports the data from the tables into DataFrames
+- It saves them into GCS as `.avro` to keep the schema along the data: this will avoid to specify/create the BigQuery table schema beforehands.
+- It starts BigQuery jobs to import those `.avro` into the respective BigQuery tables.
+
 # Development
 
-To run the application in dev mode, set a proper `application.conf` and run the app:
+To run the application in dev mode, create a proper `application.conf` and run the app:
 
 - via the IDE, just run `Main`
 - via sbt, by pre-packaging the whole thing:
-````
+```
 $ sbt stage && ./target/universal/stage/bin/pg2bq
 ```
