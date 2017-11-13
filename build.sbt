@@ -1,10 +1,12 @@
 name := "pg2bq"
 
-version := "0.1"
-
 scalaVersion := "2.11.11"
 
 scalafmtOnCompile in ThisBuild := true
+enablePlugins(GitVersioning)
+enablePlugins(JavaAppPackaging)
+
+git.baseVersion := "1.0.0"
 
 // you shall not pass
 scalacOptions in ThisBuild := Seq(
@@ -33,5 +35,3 @@ libraryDependencies += "com.google.cloud.bigdataoss" % "gcs-connector" % "1.6.1-
 //libraryDependencies += "com.spotify" % "spark-bigquery_2.11" % "0.2.1"
 libraryDependencies += "com.github.pureconfig" %% "pureconfig" % "0.8.0"
 libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.7.2"
-
-enablePlugins(JavaAppPackaging)
