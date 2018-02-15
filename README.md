@@ -31,7 +31,7 @@ gcloud {
 ```
 - Run the application specifying the config file:
 ```
-GOOGLE_APPLICATION_CREDENTIALS=token.json ./bin/pg2db -Dconfig.file=configuration.conf -Dgcloud.service-account-key-path=token.json
+GOOGLE_APPLICATION_CREDENTIALS=token.json ./bin/pg2db -Dconfig.file=configuration.conf
 ```
 - Done!
 
