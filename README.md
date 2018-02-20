@@ -13,7 +13,7 @@ If your metadata are on PostgreSQL, but your _realtime_ data are in BigQuery, it
 
 - Download the release made on GitHub: [pg2bq-1.0.3.zip](https://github.com/Powerspace/pg2bq/releases/download/v1.0.3/pg2bq-1.0.3.zip)
 - Create a Service Account to Google Cloud which has access to GCS and BigQuery, and create a json key
-- Create a configuration file for pg2bq to know where to grab and put the data (HOCON):
+- Create a configuration file `configuration.conf` for pg2bq to know where to grab and put the data (HOCON):
 ```
 jdbc {
   url = "jdbc:postgresql://mypg:5432/mydb"
